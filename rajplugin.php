@@ -43,8 +43,18 @@ class RP_plugin
 
 }
 
-$my_plugin_array = new RP_plugin();
-$my_plugin_array->show_array_values($my_array);
+//globals
+$GLOBALS['my_plugin_array'] = new RP_plugin();
+$GLOBALS['my_plugin_array']->show_array_values($my_array);
+
+//strings
+
+$content = 'Raj';
+$new_string = sprintf('%s %s', $content, $my_array['second']);
+$my_json = json_encode($my_array);
+echo $my_json;
+
+//%d for integer, %f for float etc
 
 
 die();

@@ -12,49 +12,45 @@ Author URI: https://github.com/
 License: GPLv2 or later
 */
 
-$my_array = ['first' => 1, 'second' => 2, 'third' => 3, 'four' => 4];
+// function rp_change_my_array($value){
+//     $value['five'] = 5;
+//     return $value;
+// }
+// add_filter( 'rp_my_array', 'rp_change_my_array', 10 , 1);
+
+
+// function rp_change_my_array2($value){
+//     $value['second'] = 9;
+//     return $value;
+// }
+// add_filter( 'rp_my_array', 'rp_change_my_array2', 8 , 1);
+
+// $my_array = apply_filters( 'rp_my_array', ['first' => 1, 'second' => 2, 'third' => 3, 'four' => 4] );
+
 // var_dump($my_array);
 
-// foreach ($my_array as $key => $value) {
-//     echo $key. '<br/>';
-//     echo $value. '<br/>';
-// }
 
-class RP_plugin
-{
-    function __construct()
-    {
-        echo "Starting";
-    }
-    public function show_array_values($my_array)
-    {
-        foreach ($my_array as $key => $value) {
-            $this->print_value($value);
-        }
-    }
-    private function print_value($value)
-    {
-        ?>
-        <div>
-            <?php echo $value; ?>
-        </div>
-        <?php
-    }
-
+add_action( 'rp_action_content', 'change_content', 19, 1 );
+function change_content(){
+    echo "Hi";
 }
 
-//globals
-$GLOBALS['my_plugin_array'] = new RP_plugin();
-$GLOBALS['my_plugin_array']->show_array_values($my_array);
+?>
 
-//strings
 
-$content = 'Raj';
-$new_string = sprintf('%s %s', $content, $my_array['second']);
-$my_json = json_encode($my_array);
-echo $my_json;
+<div>
+    <h2> Raj H2 </h2>
+    <p> Content </p>
+    <?php do_action( 'rp_action_content' ); ?>
+</div>
 
-//%d for integer, %f for float etc
+
+<?php 
+
+
 
 
 die();
+
+
+

@@ -30,11 +30,11 @@ License: GPLv2 or later
 // var_dump($my_array);
 
 
-add_action( 'rp_action_content', 'change_content', 19, 1 );
-function change_content(){
-    echo "Hi";
-}
-
+// add_action( 'rp_action_content', 'change_content', 19, 1 );
+// function change_content(){
+//     echo "Hi";
+// }
+/*
 ?>
 
 
@@ -43,14 +43,33 @@ function change_content(){
     <p> Content </p>
     <?php do_action( 'rp_action_content' ); ?>
 </div>
-
-
-<?php 
-
+*/
 
 
 
-die();
+//shortcode
 
 
+function shortcode_function($atts, $content = '')
+{
+    $atts = shortcode_atts(
+        array(
+            'title' => 'Default Title',
+            'color' => 'red'
+        ),
+        $atts
+    );
+    ob_start();
+    ?>
+    <div class='rp-h2'>
+        <h2> <?php echo $atts['title']; ?> </h2>
+        This is shortcode
+        <span style="color:<?php echo $atts['color']; ?>">Color </span>
+            <?php echo $content; ?>
+    </div>
 
+    <?php
+    return ob_get_clean();
+}
+
+add_shortcode('my-raj-shortcode', 'shortcode_function');

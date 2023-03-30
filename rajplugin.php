@@ -62,10 +62,13 @@ function shortcode_function($atts, $content = '')
     ob_start();
     ?>
     <div class='rp-h2'>
-        <h2> <?php echo $atts['title']; ?> </h2>
+        <h2>
+            <?php echo $atts['title']; ?>
+        </h2>
         This is shortcode
         <span style="color:<?php echo $atts['color']; ?>">Color </span>
-            <?php echo $content; ?>
+        <?php echo $content; ?>
+        <?php echo get_the_title() ?>
     </div>
 
     <?php
@@ -73,3 +76,20 @@ function shortcode_function($atts, $content = '')
 }
 
 add_shortcode('my-raj-shortcode', 'shortcode_function');
+
+// function filter_content ($content){
+//     global $post;
+    
+//     return $content . "<h3>After Content</h3>" .$post->post_date;
+// }
+
+
+function filter_content ($content){
+    if( is_page(  )){
+        $content = str_ireplace('lorem ipsum', 'Raj' , $content);
+        $content = $content . "<h3>After Content</h3>";
+    }    
+    return $content ;
+}
+
+add_filter( 'the_content', 'filter_content');

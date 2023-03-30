@@ -12,4 +12,14 @@ Author URI: https://github.com/
 License: GPLv2 or later
 */
 
-echo "<div class='notice'> Hello World </div>";
+$my_array = ['first'=>1,'second'=>2,'third'=>3,'four'=>4];
+// var_dump($my_array);
+
+foreach ($my_array as $key => $value) {
+    echo $key. '<br/>';
+    echo $value. '<br/>';
+}
+
+
+
+die();

@@ -93,3 +93,17 @@ function filter_content ($content){
 }
 
 add_filter( 'the_content', 'filter_content');
+
+// function exclude_single_posts_home($query) {
+// 	if ( $query->is_home() && $query->is_main_query() ) {
+// 		$query->set( 'post__not_in', array( 14 ) );
+// 	}
+// }
+// add_action( 'pre_get_posts', 'exclude_single_posts_home' );
+
+function my_the_posts($posts, $query = false) {
+    $ads_page = get_page_by_title( 'Ads Page' );
+    array_splice($posts, 1, 0, array($ads_page));
+    return $posts;
+}
+add_filter( 'the_posts', 'my_the_posts' );

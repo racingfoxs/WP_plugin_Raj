@@ -84,15 +84,15 @@ add_shortcode('my-raj-shortcode', 'shortcode_function');
 // }
 
 
-function filter_content ($content){
-    if( is_page(  )){
-        $content = str_ireplace('lorem ipsum', 'Raj' , $content);
-        $content = $content . "<h3>After Content</h3>";
-    }    
-    return $content ;
-}
+// function filter_content ($content){
+//     if( is_page(  )){
+//         $content = str_ireplace('lorem ipsum', 'Raj' , $content);
+//         $content = $content . "<h3>After Content</h3>";
+//     }    
+//     return $content ;
+// }
 
-add_filter( 'the_content', 'filter_content');
+// add_filter( 'the_content', 'filter_content');
 
 // function exclude_single_posts_home($query) {
 // 	if ( $query->is_home() && $query->is_main_query() ) {
@@ -101,9 +101,41 @@ add_filter( 'the_content', 'filter_content');
 // }
 // add_action( 'pre_get_posts', 'exclude_single_posts_home' );
 
-function my_the_posts($posts, $query = false) {
-    $ads_page = get_page_by_title( 'Ads Page' );
-    array_splice($posts, 1, 0, array($ads_page));
-    return $posts;
+// function my_the_posts($posts, $query = false) {
+//     $ads_page = get_page_by_title( 'Ads Page' );
+//     array_splice($posts, 1, 0, array($ads_page));
+//     return $posts;
+// }
+// add_filter( 'the_posts', 'my_the_posts' );
+
+
+//add new post type
+
+
+function new_post_type() {
+    $args = array(
+        'public' => true,
+        'label' => 'News',
+        'has_archive' => true,
+        'supports' => array('title', 'editor', 'thumbnail', 'excerpt'),
+    );
+    register_post_type( 'news', $args );
+
+    $args2 = array(
+        'label' => 'News Category',
+        'hierarchical' => true,
+    );
+
+    register_taxonomy( 'news-category', 'news', $args2 );
+
+    
 }
-add_filter( 'the_posts', 'my_the_posts' );
+
+add_action( 'init', 'new_post_type' );
+    
+function activation_plug(){
+    new_post_type();
+    flush_rewrite_rules(  );
+}
+
+register_activation_hook( __FILE__, 'activation_plug' );

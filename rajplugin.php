@@ -12,6 +12,10 @@ Author URI: https://github.com/
 License: GPLv2 or later
 */
 
+require_once(dirname(__FILE__). '/includes/news_meta_box.php');
+require_once(dirname(__FILE__). '/includes/news_shortcode.php');
+require_once(dirname(__FILE__). '/includes/news_custom_post_types.php');
+
 // function rp_change_my_array($value){
 //     $value['five'] = 5;
 //     return $value;
@@ -50,33 +54,6 @@ License: GPLv2 or later
 //shortcode
 
 
-function shortcode_function($atts, $content = '')
-{
-    $atts = shortcode_atts(
-        array(
-            'title' => 'Default Title',
-            'color' => 'red'
-        ),
-        $atts
-    );
-    ob_start();
-    ?>
-    <div class='rp-h2'>
-        <h2>
-            <?php echo $atts['title']; ?>
-        </h2>
-        This is shortcode
-        <span style="color:<?php echo $atts['color']; ?>">Color </span>
-        <?php echo $content; ?>
-        <?php echo get_the_title() ?>
-    </div>
-
-    <?php
-    return ob_get_clean();
-}
-
-add_shortcode('my-raj-shortcode', 'shortcode_function');
-
 // function filter_content ($content){
 //     global $post;
 
@@ -109,70 +86,7 @@ add_shortcode('my-raj-shortcode', 'shortcode_function');
 // add_filter( 'the_posts', 'my_the_posts' );
 
 
-//add new custom post type
-
-function new_post_type()
-{
-    $args = array(
-        'public' => true,
-        'label' => 'News',
-        'has_archive' => true,
-        'supports' => array('title', 'editor', 'thumbnail', 'excerpt'),
-    );
-    register_post_type('news', $args);
-
-    $args2 = array(
-        'label' => 'News Category',
-        'hierarchical' => true,
-    );
-
-    register_taxonomy('news-category', 'news', $args2);
-
-
-}
-
-add_action('init', 'new_post_type');
-
-function activation_plug()
-{
-    new_post_type();
-    flush_rewrite_rules();
-}
-
-register_activation_hook(__FILE__, 'activation_plug');
-
-//adding metabox
-function rp_render_nlocation_meta_box($post)
-{
-    
-    ?>
-    <div class="inside">
-        <p>
-            <label for="nlocation"> Location</label>
-            <input type="text" id="news_location" value="<?php echo get_post_meta( $post->ID, '_nlocation', true ) ?>" name="nlocation"/>
-</p>
-    </div>
-    <?php
-}
-
-//creating meta deta funcation
-function rp_meta_box_location()
-{
-    add_meta_box('new_meta_box', 'News Location', 'rp_render_nlocation_meta_box', 'news', 'normal', 'low');
-}
-
-add_action('add_meta_boxes_news', 'rp_meta_box_location');
-
-
-//savig meta data
-function rp_save_meta_data( $post_id){
-    if (isset($_POST['nlocation'])){
-        update_post_meta( $post_id, '_nlocation', $_POST['nlocation']);
-    }
-}
-
-add_action( 'save_post_news', 'rp_save_meta_data', 10 );
-
+define('RP_PLUGIN_FILE', __FILE__);
 
 function rp_adding_meta_nlocation($content){
     if( is_singular( 'news' )){

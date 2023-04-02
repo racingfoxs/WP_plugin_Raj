@@ -12,6 +12,10 @@ Author URI: https://github.com/
 License: GPLv2 or later
 */
 
+require_once(dirname(__FILE__). '/includes/news_meta_box.php');
+require_once(dirname(__FILE__). '/includes/news_shortcode.php');
+require_once(dirname(__FILE__). '/includes/news_custom_post_types.php');
+
 // function rp_change_my_array($value){
 //     $value['five'] = 5;
 //     return $value;
@@ -50,46 +54,45 @@ License: GPLv2 or later
 //shortcode
 
 
-function shortcode_function($atts, $content = '')
-{
-    $atts = shortcode_atts(
-        array(
-            'title' => 'Default Title',
-            'color' => 'red'
-        ),
-        $atts
-    );
-    ob_start();
-    ?>
-    <div class='rp-h2'>
-        <h2>
-            <?php echo $atts['title']; ?>
-        </h2>
-        This is shortcode
-        <span style="color:<?php echo $atts['color']; ?>">Color </span>
-        <?php echo $content; ?>
-        <?php echo get_the_title() ?>
-    </div>
-
-    <?php
-    return ob_get_clean();
-}
-
-add_shortcode('my-raj-shortcode', 'shortcode_function');
-
 // function filter_content ($content){
 //     global $post;
-    
+
 //     return $content . "<h3>After Content</h3>" .$post->post_date;
 // }
 
 
-function filter_content ($content){
-    if( is_page(  )){
-        $content = str_ireplace('lorem ipsum', 'Raj' , $content);
-        $content = $content . "<h3>After Content</h3>";
-    }    
-    return $content ;
+// function filter_content ($content){
+//     if( is_page(  )){
+//         $content = str_ireplace('lorem ipsum', 'Raj' , $content);
+//         $content = $content . "<h3>After Content</h3>";
+//     }    
+//     return $content ;
+// }
+
+// add_filter( 'the_content', 'filter_content');
+
+// function exclude_single_posts_home($query) {
+// 	if ( $query->is_home() && $query->is_main_query() ) {
+// 		$query->set( 'post__not_in', array( 14 ) );
+// 	}
+// }
+// add_action( 'pre_get_posts', 'exclude_single_posts_home' );
+
+// function my_the_posts($posts, $query = false) {
+//     $ads_page = get_page_by_title( 'Ads Page' );
+//     array_splice($posts, 1, 0, array($ads_page));
+//     return $posts;
+// }
+// add_filter( 'the_posts', 'my_the_posts' );
+
+
+define('RP_PLUGIN_FILE', __FILE__);
+
+function rp_adding_meta_nlocation($content){
+    if( is_singular( 'news' )){
+        $content ='<p>' . get_post_meta( get_the_ID(  ), '_nlocation', true );
+    }
+    return $content;
 }
 
-add_filter( 'the_content', 'filter_content');
+add_filter( 'the_content', 'rp_adding_meta_nlocation' );

@@ -86,11 +86,15 @@ require_once(dirname(__FILE__). '/includes/news_custom_post_types.php');
 // add_filter( 'the_posts', 'my_the_posts' );
 
 
+
+if(!defined('ABSPATH'))
+    die("No Direct Access");
+
 define('RP_PLUGIN_FILE', __FILE__);
 
 function rp_adding_meta_nlocation($content){
     if( is_singular( 'news' )){
-        $content ='<p>' . get_post_meta( get_the_ID(  ), '_nlocation', true );
+        $content ='<p>' . esc_html(  get_post_meta( get_the_ID(  ), '_nlocation', true ) ) . '</p>';
     }
     return $content;
 }

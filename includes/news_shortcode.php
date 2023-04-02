@@ -1,5 +1,6 @@
 <?php
-
+if(!defined('ABSPATH'))
+die("No Direct Access");
 
 
 function shortcode_function($atts, $content = '')

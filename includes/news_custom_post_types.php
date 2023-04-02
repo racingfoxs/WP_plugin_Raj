@@ -1,5 +1,6 @@
 <?php 
-
+if(!defined('ABSPATH'))
+die("No Direct Access");
 
 //add new custom post type
 
@@ -25,6 +26,8 @@ function new_post_type()
 
 add_action('init', 'new_post_type');
 
+
+//activation  cpt
 function activation_plug()
 {
     new_post_type();

@@ -88,12 +88,21 @@ require_once(dirname(__FILE__) . '/includes/admin_settings.php');
 // }
 // add_filter( 'the_posts', 'my_the_posts' );
 
-
-
 if (!defined('ABSPATH'))
     die("No Direct Access");
 
 define('RP_PLUGIN_FILE', __FILE__);
+define('RP_VERSION', '1.0');
+
+function addStyleFrontEnd()
+{
+    if (is_singular('news')) {
+        wp_enqueue_style('news-setting-style', plugins_url('includes/css/frontend.css', RP_PLUGIN_FILE), array(), RP_VERSION);
+        wp_enqueue_script('news-setting-script', plugins_url('includes/js/frontend.js', RP_PLUGIN_FILE), array(), RP_VERSION);
+    }
+}
+
+add_action('wp_enqueue_scripts', 'addStyleFrontEnd');
 
 function rp_adding_meta_nlocation($content)
 {
@@ -114,33 +123,38 @@ function rp_add_post_to_end($content)
     if (is_singular('news')) {
         $args = array(
             // 'numberposts' => intval(get_option('rp_related_amount'), 3)
-            'posts_per_page'=>intval(get_option('rp_related_amount'), 3),
-            'post_type'=> 'news',
+            'posts_per_page' => intval(get_option('rp_related_amount'), 3),
+            'post_type' => 'news',
             // 'exclude'=> get_the_ID(  ),
-            'post__not_in'=> array(get_the_ID(  )),
-            'meta_key'=> '_nlocation',
-            'meta_value'=>esc_html(get_post_meta(get_the_ID(), '_nlocation', true)) ,
+            'post__not_in' => array(get_the_ID()),
+            'meta_key' => '_nlocation',
+            'meta_value' => esc_html(get_post_meta(get_the_ID(), '_nlocation', true)),
         );
-        $wp_query = New WP_Query($args);
+        $wp_query = new WP_Query($args);
 
         // $latest_post =  $wp_query->query($args);
-        if($wp_query->have_posts() && get_option('rp_show_related', true)){
-        ob_start();
-        ?>
-        <h3><?php echo esc_html(get_option('rp_news_title', 'Related News')); ?> </h3>
-        <p><?php echo intval(get_option('rp_related_amount')); ?></p>
-        <ul>
-            <?php while ($wp_query->have_posts()): $wp_query->the_post(); ?>
-               
-                <li>
-                    <a href='<?php echo get_the_permalink( $wp_query->post->ID ); ?>'><?php echo the_title( ); ?></a>
-                </li>
-            <?php endwhile; ?>
-        </ul>
-        <?php
-        $content .= ob_get_clean();
-        wp_reset_postdata(); //because we are calling global
-    }
+        if ($wp_query->have_posts() && get_option('rp_show_related', true)) {
+            ob_start();
+            ?>
+            <h3 class='raj-news-title'>
+                <?php echo esc_html(get_option('rp_news_title', 'Related News')); ?>
+            </h3>
+            <p>
+                <?php echo intval(get_option('rp_related_amount')); ?>
+            </p>
+            <ul>
+                <?php while ($wp_query->have_posts()):
+                    $wp_query->the_post(); ?>
+
+                    <li>
+                        <a href='<?php echo get_the_permalink($wp_query->post->ID); ?>'><?php echo the_title(); ?></a>
+                    </li>
+                <?php endwhile; ?>
+            </ul>
+            <?php
+            $content .= ob_get_clean();
+            wp_reset_postdata(); //because we are calling global
+        }
     }
     return $content;
 }

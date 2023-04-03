@@ -12,9 +12,10 @@ Author URI: https://github.com/
 License: GPLv2 or later
 */
 
-require_once(dirname(__FILE__). '/includes/news_meta_box.php');
-require_once(dirname(__FILE__). '/includes/news_shortcode.php');
-require_once(dirname(__FILE__). '/includes/news_custom_post_types.php');
+echo "Raj";
+require_once(dirname(__FILE__) . '/includes/news_meta_box.php');
+require_once(dirname(__FILE__) . '/includes/news_shortcode.php');
+require_once(dirname(__FILE__) . '/includes/news_custom_post_types.php');
 
 // function rp_change_my_array($value){
 //     $value['five'] = 5;
@@ -23,11 +24,13 @@ require_once(dirname(__FILE__). '/includes/news_custom_post_types.php');
 // add_filter( 'rp_my_array', 'rp_change_my_array', 10 , 1);
 
 
-// function rp_change_my_array2($value){
+
+// function rp_change_my_array2($value ){
 //     $value['second'] = 9;
 //     return $value;
 // }
-// add_filter( 'rp_my_array', 'rp_change_my_array2', 8 , 1);
+// add_filter( 'rp_my_array', 'rp_change_my_array2', 2 , 1 );
+
 
 // $my_array = apply_filters( 'rp_my_array', ['first' => 1, 'second' => 2, 'third' => 3, 'four' => 4] );
 
@@ -87,16 +90,57 @@ require_once(dirname(__FILE__). '/includes/news_custom_post_types.php');
 
 
 
-if(!defined('ABSPATH'))
+if (!defined('ABSPATH'))
     die("No Direct Access");
 
 define('RP_PLUGIN_FILE', __FILE__);
 
-function rp_adding_meta_nlocation($content){
-    if( is_singular( 'news' )){
-        $content ='<p>' . esc_html(  get_post_meta( get_the_ID(  ), '_nlocation', true ) ) . '</p>';
+function rp_adding_meta_nlocation($content)
+{
+    if (is_singular('news')) {
+        $content .= '<p>' . esc_html(get_post_meta(get_the_ID(), '_nlocation', true)) . '</p>';
     }
     return $content;
 }
 
-add_filter( 'the_content', 'rp_adding_meta_nlocation' );
+add_filter('the_content', 'rp_adding_meta_nlocation', 8);
+
+
+//addingpost to end
+
+function rp_add_post_to_end($content)
+{
+    // global $post;
+    if (is_singular('news')) {
+        $args = array(
+            'numberposts' => 3,
+            'post_type'=> 'news',
+            // 'exclude'=> get_the_ID(  ),
+            'post__not_in'=> array(get_the_ID(  )),
+            'meta_key'=> '_nlocation',
+            'meta_value'=>esc_html(get_post_meta(get_the_ID(), '_nlocation', true)) ,
+        );
+        $wp_query = New WP_Query($args);
+
+        // $latest_post =  $wp_query->query($args);
+        if($wp_query->have_posts()){
+        ob_start();
+        ?>
+        <h3>Latest News </h3>
+        <ul>
+            <?php while ($wp_query->have_posts()): $wp_query->the_post(); ?>
+               
+                <li>
+                    <a href='<?php echo get_the_permalink( $wp_query->post->ID ); ?>'><?php echo the_title( ); ?></a>
+                </li>
+            <?php endwhile; ?>
+        </ul>
+        <?php
+        $content .= ob_get_clean();
+        wp_reset_postdata(); //because we are calling global
+    }
+    }
+    return $content;
+}
+
+add_filter('the_content', 'rp_add_post_to_end', 12);

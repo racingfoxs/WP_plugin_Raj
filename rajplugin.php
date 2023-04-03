@@ -12,10 +12,10 @@ Author URI: https://github.com/
 License: GPLv2 or later
 */
 
-echo "Raj";
 require_once(dirname(__FILE__) . '/includes/news_meta_box.php');
 require_once(dirname(__FILE__) . '/includes/news_shortcode.php');
 require_once(dirname(__FILE__) . '/includes/news_custom_post_types.php');
+require_once(dirname(__FILE__) . '/includes/admin_settings.php');
 
 // function rp_change_my_array($value){
 //     $value['five'] = 5;
@@ -113,7 +113,8 @@ function rp_add_post_to_end($content)
     // global $post;
     if (is_singular('news')) {
         $args = array(
-            'numberposts' => 3,
+            // 'numberposts' => intval(get_option('rp_related_amount'), 3)
+            'posts_per_page'=>intval(get_option('rp_related_amount'), 3),
             'post_type'=> 'news',
             // 'exclude'=> get_the_ID(  ),
             'post__not_in'=> array(get_the_ID(  )),
@@ -123,10 +124,11 @@ function rp_add_post_to_end($content)
         $wp_query = New WP_Query($args);
 
         // $latest_post =  $wp_query->query($args);
-        if($wp_query->have_posts()){
+        if($wp_query->have_posts() && get_option('rp_show_related', true)){
         ob_start();
         ?>
-        <h3>Latest News </h3>
+        <h3><?php echo esc_html(get_option('rp_news_title', 'Related News')); ?> </h3>
+        <p><?php echo intval(get_option('rp_related_amount')); ?></p>
         <ul>
             <?php while ($wp_query->have_posts()): $wp_query->the_post(); ?>
                

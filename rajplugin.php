@@ -12,10 +12,14 @@ Author URI: https://github.com/
 License: GPLv2 or later
 */
 
+// phpinfo();
+// xdebug_info();
+
 require_once(dirname(__FILE__) . '/includes/news_meta_box.php');
 require_once(dirname(__FILE__) . '/includes/news_shortcode.php');
 require_once(dirname(__FILE__) . '/includes/news_custom_post_types.php');
 require_once(dirname(__FILE__) . '/includes/admin_settings.php');
+require_once(dirname(__FILE__) . '/includes/news-content.php');
 
 // function rp_change_my_array($value){
 //     $value['five'] = 5;
@@ -94,6 +98,36 @@ if (!defined('ABSPATH'))
 define('RP_PLUGIN_FILE', __FILE__);
 define('RP_VERSION', '1.0');
 
+
+function rp_add_post_on_activation()
+{
+    $post_title = 'Raj Insert Post';
+    if (post_exists($post_title)) {
+        return;
+    }
+
+    $post_id = wp_insert_post(
+        array(
+            'post_title' => $post_title,
+            'post_status' => 'publish',
+            'post_type' => 'page',
+            'post_content' => '[my-raj-shortcode]',
+        )
+    );
+    update_option('rp_page_id', $post_id);
+}
+register_activation_hook(RP_PLUGIN_FILE, 'rp_add_post_on_activation');
+
+function filterContentPost ($content){
+    $post_id = get_option('rp_page_id', false);
+    if(get_the_ID() == $post_id){
+        return '[my-raj-shortcode]';
+    }
+    return $content;
+}
+
+add_filter( 'the_content', 'filterContentPost' );
+
 function addStyleFrontEnd()
 {
     if (is_singular('news')) {
@@ -103,60 +137,3 @@ function addStyleFrontEnd()
 }
 
 add_action('wp_enqueue_scripts', 'addStyleFrontEnd');
-
-function rp_adding_meta_nlocation($content)
-{
-    if (is_singular('news')) {
-        $content .= '<p>' . esc_html(get_post_meta(get_the_ID(), '_nlocation', true)) . '</p>';
-    }
-    return $content;
-}
-
-add_filter('the_content', 'rp_adding_meta_nlocation', 8);
-
-
-//addingpost to end
-
-function rp_add_post_to_end($content)
-{
-    // global $post;
-    if (is_singular('news')) {
-        $args = array(
-            // 'numberposts' => intval(get_option('rp_related_amount'), 3)
-            'posts_per_page' => intval(get_option('rp_related_amount'), 3),
-            'post_type' => 'news',
-            // 'exclude'=> get_the_ID(  ),
-            'post__not_in' => array(get_the_ID()),
-            'meta_key' => '_nlocation',
-            'meta_value' => esc_html(get_post_meta(get_the_ID(), '_nlocation', true)),
-        );
-        $wp_query = new WP_Query($args);
-
-        // $latest_post =  $wp_query->query($args);
-        if ($wp_query->have_posts() && get_option('rp_show_related', true)) {
-            ob_start();
-            ?>
-            <h3 class='raj-news-title'>
-                <?php echo esc_html(get_option('rp_news_title', 'Related News')); ?>
-            </h3>
-            <p>
-                <?php echo intval(get_option('rp_related_amount')); ?>
-            </p>
-            <ul>
-                <?php while ($wp_query->have_posts()):
-                    $wp_query->the_post(); ?>
-
-                    <li>
-                        <a href='<?php echo get_the_permalink($wp_query->post->ID); ?>'><?php echo the_title(); ?></a>
-                    </li>
-                <?php endwhile; ?>
-            </ul>
-            <?php
-            $content .= ob_get_clean();
-            wp_reset_postdata(); //because we are calling global
-        }
-    }
-    return $content;
-}
-
-add_filter('the_content', 'rp_add_post_to_end', 12);

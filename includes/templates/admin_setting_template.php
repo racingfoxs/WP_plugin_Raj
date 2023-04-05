@@ -1,6 +1,6 @@
 <?php include_once(dirname(__FILE__) . '/header.php'); ?>
 <div class="wrap">
-    <h1  class='raj-news-title'> News Settings</h1>
+    
     <form method="post" action="<?php echo admin_url('edit.php?post_type=news&page=news-settings') ?>">
         <?php wp_nonce_field('news-settings-save', 'news_settings_nonce'); ?>
         <table class="form-table">

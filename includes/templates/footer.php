@@ -1,3 +1,3 @@
 <div>
-    <p> Footer </p>
+    <h2> Copyright | BrainStromForce </h2>
 </div>

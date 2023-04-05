@@ -6,15 +6,15 @@ if (!defined('ABSPATH'))
 function rp_render_nlocation_meta_box($post)
 {
     wp_nonce_field('rp_meta_save', 'news_metabox_nonce');
-    $location = rp_get_news_location($post->ID); 
-    if(isset($location->lat) && isset($location->lon)){ 
+    $location = rp_get_news_location($post->ID);
+    if (isset($location->lat) && isset($location->lon)) {
         $lon = $location->lon;
         $lat = $location->lat;
-    }else{
+    } else {
         $lon = "";
         $lat = "";
     }
-    
+
     ?>
     <div class="inside">
         <p>
@@ -24,13 +24,11 @@ function rp_render_nlocation_meta_box($post)
         </p>
         <p>
             <label for="nlocation_lat"> Location Lattitude</label>
-            <input type="text" id="news_location_lat"
-                value="<?php echo esc_attr($lat) ?>" name="nlocation_lat" />
+            <input type="text" id="news_location_lat" value="<?php echo esc_attr($lat) ?>" name="nlocation_lat" />
         </p>
         <p>
             <label for="nlocation_lon"> Location</label>
-            <input type="text" id="news_location_lon"
-                value="<?php echo esc_attr($lon)?>" name="nlocation_lon" />
+            <input type="text" id="news_location_lon" value="<?php echo esc_attr($lon) ?>" name="nlocation_lon" />
         </p>
     </div>
     <?php
@@ -56,19 +54,16 @@ function rp_save_meta_data($post_id)
 
     if (defined(' DOING_AUTOSAVE') && DOING_AUTOSAVE) {
         return;
-
     }
 
     if (!current_user_can('edit_post', $post_id)) {
         return;
-
     }
-
 
     if (isset($_POST['nlocation'])) {
         update_post_meta($post_id, '_nlocation', sanitize_text_field($_POST['nlocation']));
     }
-    if (isset($_POST['nlocation_lat'])) {
+    if (isset($_POST['nlocation_lat']) && isset($_POST['nlocation_lon'])) {
         rp_save_news_location($post_id, $_POST['nlocation_lat'], $_POST['nlocation_lon']);
     }
 }

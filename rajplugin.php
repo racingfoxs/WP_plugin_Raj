@@ -119,7 +119,8 @@ require_once(dirname(__FILE__) . '/includes/news_custom_post_types.php');
 require_once(dirname(__FILE__) . '/includes/admin_settings.php');
 require_once(dirname(__FILE__) . '/includes/news-content.php');
 require_once(dirname(__FILE__) . '/includes/insert_post_activation.php');
-
+require_once(dirname(__FILE__) . '/includes/welcome_screen.php');
+require_once(dirname(__FILE__) . '/includes/rp_api_calls.php');
 
 function addStyleFrontEnd()
 {

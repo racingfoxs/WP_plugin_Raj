@@ -10,16 +10,12 @@ Requires PHP: 5.2
 Author: Automattic
 Author URI: https://github.com/
 License: GPLv2 or later
+Text Domain: raj-plugin
 */
 
 // phpinfo();
 // xdebug_info();
 
-require_once(dirname(__FILE__) . '/includes/news_meta_box.php');
-require_once(dirname(__FILE__) . '/includes/news_shortcode.php');
-require_once(dirname(__FILE__) . '/includes/news_custom_post_types.php');
-require_once(dirname(__FILE__) . '/includes/admin_settings.php');
-require_once(dirname(__FILE__) . '/includes/news-content.php');
 
 // function rp_change_my_array($value){
 //     $value['five'] = 5;
@@ -60,7 +56,6 @@ require_once(dirname(__FILE__) . '/includes/news-content.php');
 
 //shortcode
 
-
 // function filter_content ($content){
 //     global $post;
 
@@ -99,34 +94,32 @@ define('RP_PLUGIN_FILE', __FILE__);
 define('RP_VERSION', '1.0');
 
 
-function rp_add_post_on_activation()
-{
-    $post_title = 'Raj Insert Post';
-    if (post_exists($post_title)) {
-        return;
-    }
 
-    $post_id = wp_insert_post(
-        array(
-            'post_title' => $post_title,
-            'post_status' => 'publish',
-            'post_type' => 'page',
-            'post_content' => '[my-raj-shortcode]',
-        )
-    );
-    update_option('rp_page_id', $post_id);
-}
-register_activation_hook(RP_PLUGIN_FILE, 'rp_add_post_on_activation');
+require_once(dirname(__FILE__) . '/includes/wp_requirements.php');
 
-function filterContentPost ($content){
-    $post_id = get_option('rp_page_id', false);
-    if(get_the_ID() == $post_id){
-        return '[my-raj-shortcode]';
-    }
-    return $content;
+$my_plugin_requirements = new RP_Requirements(
+    'Raj Plugin',
+    RP_PLUGIN_FILE,
+    array(
+        'PHP' => '7.4',
+        'WordPress' => '5.0',
+    )
+);
+
+if ( false === $my_plugin_requirements->pass()){
+    $my_plugin_requirements->halt();
+    return;
 }
 
-add_filter( 'the_content', 'filterContentPost' );
+
+require_once(dirname(__FILE__) . '/includes/news_location.php');
+require_once(dirname(__FILE__) . '/includes/news_meta_box.php');
+require_once(dirname(__FILE__) . '/includes/news_shortcode.php');
+require_once(dirname(__FILE__) . '/includes/news_custom_post_types.php');
+require_once(dirname(__FILE__) . '/includes/admin_settings.php');
+require_once(dirname(__FILE__) . '/includes/news-content.php');
+require_once(dirname(__FILE__) . '/includes/insert_post_activation.php');
+
 
 function addStyleFrontEnd()
 {

@@ -2,6 +2,8 @@
 function rp_adding_meta_nlocation($content)
 {
     if (is_singular('news')) {
+        $location = hwy_get_news_location(get_the_ID());
+        $content = '<p>' . esc_html($location->lat) . ',' . esc_html($location->lon) . '</p>' . $content;
         $content .= '<p>' . esc_html(get_post_meta(get_the_ID(), '_nlocation', true)) . '</p>';
     }
     return $content;

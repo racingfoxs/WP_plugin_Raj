@@ -1,0 +1,23 @@
+{
+    "name": "raj/raj-plugin",
+    "description": "A brief description of your plugin",
+    "type": "wordpress-plugin",
+    "keywords": ["wordpress", "plugin"],
+    "homepage": "https://github.com/racingfoxs/WP_plugin_Raj",
+    "license": "GPL-2.0+",
+    "authors": [
+        {
+            "name": "D Raj",
+            "email": "clixacom@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "composer/installers": "^1.7"
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    }
+}

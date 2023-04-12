@@ -91,7 +91,7 @@ if (!defined('ABSPATH'))
     die("No Direct Access");
 
 define('RP_PLUGIN_FILE', __FILE__);
-define('RP_VERSION', '1.0');
+define('RP_VERSION', '1.0.0.1');
 
 
 

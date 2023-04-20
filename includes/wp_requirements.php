@@ -92,8 +92,8 @@ if ( ! class_exists( 'RP_Requirements' ) ) {
 		 */
 		public function __construct( $name, $plugin, $requirements ) {
 
-			$this->name = esc_html( wp_strip_all_tags( $name ) );
-			$this->plugin = $plugin;
+			$this->name         = esc_html( wp_strip_all_tags( $name ) );
+			$this->plugin       = $plugin;
 			$this->requirements = $requirements;
 
 			if ( ! empty( $requirements ) && is_array( $requirements ) ) {
@@ -105,7 +105,8 @@ if ( ! class_exists( 'RP_Requirements' ) ) {
 						'WordPress'  => '',
 						'PHP'        => '',
 						'Extensions' => '',
-					), $requirements
+					),
+					$requirements
 				);
 
 				// Check for WordPress version.
@@ -114,7 +115,7 @@ if ( ! class_exists( 'RP_Requirements' ) ) {
 						$wp_version = get_bloginfo( 'version' );
 						if ( version_compare( $wp_version, $requirements['WordPress'] ) === - 1 ) {
 							$failures['WordPress'] = $wp_version;
-							$this->wp = false;
+							$this->wp              = false;
 						}
 					}
 				}
@@ -123,7 +124,7 @@ if ( ! class_exists( 'RP_Requirements' ) ) {
 				if ( $requirements['PHP'] && is_string( $requirements['PHP'] ) ) {
 					if ( version_compare( PHP_VERSION, $requirements['PHP'] ) === -1 ) {
 						$failures['PHP'] = PHP_VERSION;
-						$this->php = false;
+						$this->php       = false;
 					}
 				}
 
@@ -135,7 +136,7 @@ if ( ! class_exists( 'RP_Requirements' ) ) {
 						}
 					}
 					if ( in_array( false, $extensions ) ) {
-						foreach ( $extensions as $extension_name => $found  ) {
+						foreach ( $extensions as $extension_name => $found ) {
 							if ( $found === false ) {
 								$failures['Extensions'][ $extension_name ] = $extension_name;
 							}
@@ -168,11 +169,14 @@ if ( ! class_exists( 'RP_Requirements' ) ) {
 		 * @return bool
 		 */
 		public function pass() {
-			if ( in_array( false, array(
-				$this->wp,
-				$this->php,
-				$this->extensions,
-			) ) ) {
+			if ( in_array(
+				false,
+				array(
+					$this->wp,
+					$this->php,
+					$this->extensions,
+				)
+			) ) {
 				return false;
 			}
 			return true;
@@ -203,20 +207,19 @@ if ( ! class_exists( 'RP_Requirements' ) ) {
 
 					if ( 'Extensions' == $requirement ) {
 						if ( is_array( $found ) ) {
-							$notice .= sprintf( 
-									'Required PHP Extension(s) not found: %s.', 
-									join( ', ', $found ) 
-								) . '<br>';
+							$notice .= sprintf(
+								'Required PHP Extension(s) not found: %s.',
+								join( ', ', $found )
+							) . '<br>';
 						}
 					} else {
-						$notice .= sprintf( 
-								'Required %1$s version: %2$s - Version found: %3$s',
-								$requirement, 
-								$required, 
-								$found 
-							) . '<br>';
+						$notice .= sprintf(
+							'Required %1$s version: %2$s - Version found: %3$s',
+							$requirement,
+							$required,
+							$found
+						) . '<br>';
 					}
-
 				}
 
 				$notice .= '<em>' . sprintf( 'Please update to meet %s requirements.', $name ) . '</em>' . "\n";

@@ -1,6 +1,6 @@
 <?php 
 
-/*
+/** 
 function rp_api_call($content) {
     $url = 'https://jsonplaceholder.typicode.com/posts';
     $response = wp_remote_get( $url );
@@ -20,3 +20,4 @@ function rp_api_call($content) {
 add_filter('the_content', 'rp_api_call');
 
 */
+

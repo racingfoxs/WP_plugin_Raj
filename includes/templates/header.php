@@ -1,3 +1,3 @@
 <div>
-<h1  class='raj-news-title'> News Settings</h1>
+<h1  class='raj-news-title'> News Settings Raj</h1>
 </div>

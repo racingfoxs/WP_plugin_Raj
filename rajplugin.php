@@ -131,3 +131,10 @@ function addStyleFrontEnd() {
 }
 
 add_action( 'wp_enqueue_scripts', 'addStyleFrontEnd' );
+
+
+
+function raj_plugin_language_text_domain (){
+	load_plugin_textdomain( 'raj-plugin', false, dirname( plugin_basename( __FILE__ )).'/languages' );
+}
+add_action( 'init', 'raj_plugin_language_text_domain');

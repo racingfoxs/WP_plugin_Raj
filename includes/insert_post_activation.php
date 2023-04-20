@@ -1,11 +1,37 @@
-<?php 
+<?php
 
 function rp_add_post_on_activation()
 {
     $post_title = 'Raj Insert Post';
-    if (post_exists($post_title)) {
+    $post_id = get_option('rp_page_id', false);
+
+    if (!empty($post_id)) {
+        $insert_post_status = get_post_status($post_id);
+        $insert_post_title = get_the_title($post_id);
+
+        if ($insert_post_status !== 'publish') {
+            wp_update_post(
+                array(
+                    'ID' => $post_id,
+                    'post_status' => 'publish',
+                    // 'post_title' => $post_title,
+                )
+            );
+        }
+
+        if ($insert_post_title !== $post_title) {
+             wp_update_post(
+                array(
+                    'ID' => $post_id,
+                    'post_title' => $post_title,
+                )
+            );
+        }
+
         return;
     }
+
+
 
     $post_id = wp_insert_post(
         array(

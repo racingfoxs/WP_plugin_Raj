@@ -10,7 +10,7 @@ function rp_render_nlocation_meta_box($post)
     if (isset($location->lat) && isset($location->lon)) {
         $lon = $location->lon;
         $lat = $location->lat;
-    } else {
+    } else{
         $lon = "";
         $lat = "";
     }
@@ -18,12 +18,12 @@ function rp_render_nlocation_meta_box($post)
     ?>
     <div class="inside">
         <p>
-            <label for="nlocation"> Location</label>
+            <label for="nlocation"> <?php echo esc_html__('Location', 'raj-plugin')?></label>
             <input type="text" id="news_location"
                 value="<?php echo esc_attr(get_post_meta($post->ID, '_nlocation', true)) ?>" name="nlocation" />
         </p>
         <p>
-            <label for="nlocation_lat"> Location Lattitude</label>
+            <label for="nlocation_lat"> <?php echo esc_html__('Location Lattitude', 'raj-plugin')?></label>
             <input type="text" id="news_location_lat" value="<?php echo esc_attr($lat) ?>" name="nlocation_lat" />
         </p>
         <p>
@@ -60,9 +60,10 @@ function rp_save_meta_data($post_id)
         return;
     }
 
-    if (isset($_POST['nlocation'])) {
-        update_post_meta($post_id, '_nlocation', sanitize_text_field($_POST['nlocation']));
+    if (!empty( $_POST['nlocation']) ){
+        update_post_meta( $post_id, '_nlocation', sanitize_text_field( $_POST['nlocation'] ));
     }
+    
     if (isset($_POST['nlocation_lat']) && isset($_POST['nlocation_lon'])) {
         rp_save_news_location($post_id, $_POST['nlocation_lat'], $_POST['nlocation_lon']);
     }

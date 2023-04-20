@@ -1,6 +1,6 @@
-<?php 
-if(!defined('ABSPATH'))
-die("No Direct Access");
+<?php
+if (!defined('ABSPATH'))
+    die("No Direct Access");
 
 //add new custom post type
 
@@ -11,6 +11,7 @@ function new_post_type()
         'label' => 'News',
         'has_archive' => true,
         'supports' => array('title', 'editor', 'thumbnail', 'excerpt'),
+        'show_in_rest' => true,
     );
     register_post_type('news', $args);
 

@@ -18,7 +18,7 @@ class RP_Admin
     }
     function register_settings_menu_page()
     {
-        add_submenu_page('edit.php?post_type=news', 'News Settings', 'Settings', 'manage_options', 'news-settings', array($this, 'render_setting_page'));
+        add_submenu_page('edit.php?post_type=news', 'News Settings raj', 'Settings ss', 'manage_options', 'news-settings', array($this, 'render_setting_page'));
     }
 
     function render_setting_page()
